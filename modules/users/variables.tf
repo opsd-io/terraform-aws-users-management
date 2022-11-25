@@ -19,6 +19,8 @@ variable "iam_user_tags" {
   type        = map(string)
   default     = {}
 
+  # tag key must be a minimum of 1 and a maximum of 128 Unicode characters in UTF-8.
+  # tag value must be a minimum of 0 and a maximum of 256 Unicode characters in UTF-8.
   # validation {
   #   condition     = can(regex("^[a-zA-Z\\+\\=\\,\\.\\@\\-\\_0-9]{1,128}$", var.iam_user_tags))
   #   error_message = "The allowed characters are letters, numbers, spaces representable in UTF-8, and the following characters: underscore (_), dot(.), colon(:), slash (/), equal (=), plus (+), hyphen (-) and at sign (@)."
