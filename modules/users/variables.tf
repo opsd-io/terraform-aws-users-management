@@ -26,3 +26,21 @@ variable "iam_user_tags" {
   #   error_message = "The allowed characters are letters, numbers, spaces representable in UTF-8, and the following characters: underscore (_), dot(.), colon(:), slash (/), equal (=), plus (+), hyphen (-) and at sign (@)."
   # }
 }
+
+variable "iam_user_ssh_key_encoding" {
+  description = "Specifies the public key encoding format to use in the response."
+  type        = string
+  default     = "SSH" # Avaliable options: SSH and PEM
+}
+
+variable "iam_user_ssh_public_key" {
+  description = "Unique identifier for the SSH public key."
+  type        = string
+  default     = ""
+}
+
+variable "iam_user_ssh_key_status" {
+  description = "Status of the SSH/PEM public key"
+  type        = string
+  default     = "Active" # Avaliable options: Active and Inactive
+}
