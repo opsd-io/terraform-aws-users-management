@@ -15,14 +15,14 @@ variable "group_name" {
 }
 
 variable "group_path" {
-    description = "Path of an IAM group"
-    type = string
-    default = "/"
-    
-    validation {
-      condition = can(regex("^(\u002F)|(\u002F[\u0021-\u007F]+\u002F){1,512}$", var.group_path))
-      error_message = "Paths consists of either a forward slash (/) by itself or a string that must begin and end with forward slashes."
-    }  
+  description = "Path of an IAM group"
+  type        = string
+  default     = "/"
+
+  validation {
+    condition     = can(regex("^(\u002F)|(\u002F[\u0021-\u007F]+\u002F){1,512}$", var.group_path))
+    error_message = "Paths consists of either a forward slash (/) by itself or a string that must begin and end with forward slashes."
+  }
 }
 
 variable "group_users" {
