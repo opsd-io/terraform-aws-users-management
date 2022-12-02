@@ -1,6 +1,6 @@
 output "ssh_keys" {
   description = "List of ssh_key objects, each containing public key, its owner and its encoding"
-  value = local.ssh_keys 
+  value       = local.ssh_keys
 }
 
 output "user_arns" {
