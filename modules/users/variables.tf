@@ -5,10 +5,10 @@ variable "users" {
     name = string
     path = optional(string)
     tags = optional(map(string))
-    ssh_keys = list(object({
-      key = string
+    ssh_keys = optional(list(object({
+      key          = string
       key_encoding = optional(string)
-      key_status = optional(string)
-    }))
+      key_status   = optional(string)
+    })))
   }))
 }

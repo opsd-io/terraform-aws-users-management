@@ -1,7 +1,7 @@
 locals {
   ssh_keys = flatten([
     for user in var.users : [
-      for ssh_key in user.ssh_keys : {
+      for ssh_key in user.ssh_keys == null ? [] : user.ssh_keys : {
         username   = user.name
         public_key = ssh_key.key
         encoding   = ssh_key.key_encoding == null ? "SSH" : ssh_key.key_encoding
