@@ -8,3 +8,11 @@ variable "policies" {
     policy      = any
   }))
 }
+
+variable "users" {
+  description = "List of objects containing users name and all other user related attributes"
+  type = list(object({
+    name     = string
+    policies = optional(list(string))
+  }))
+}

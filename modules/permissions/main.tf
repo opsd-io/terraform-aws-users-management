@@ -7,3 +7,10 @@ resource "aws_iam_policy" "main" {
   tags        = each.value.tags
   policy      = jsonencode(each.value.policy)
 }
+
+resource "aws_iam_user_policy_attachment" "main" {
+  for_each = { for k, v in var.users : k => v if can(k.value.policies) }
+
+  user       = each.value.name
+  policy_arn = each.value.policies[*]
+}
