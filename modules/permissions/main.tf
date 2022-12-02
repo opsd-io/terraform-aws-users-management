@@ -14,3 +14,17 @@ resource "aws_iam_user_policy_attachment" "main" {
   user       = each.value.name
   policy_arn = each.value.policies[*]
 }
+
+resource "aws_iam_group_policy_attachment" "main" {
+  for_each = { for k, v in var.users : k => v if can(k.value.policies) }
+
+  group      = each.value.name
+  policy_arn = each.value.policies[*]
+}
+
+resource "aws_iam_role_policy_attachment" "main" {
+  for_each = { for k, v in var.users : k => v if can(k.value.policies) }
+
+  role       = each.value.name
+  policy_arn = each.value.policies[*]
+}
