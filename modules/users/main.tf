@@ -1,25 +1,29 @@
 locals {
-  key_defaults = {
-    key_encoding = "SSH"
-    key_status   = "Active"
-  }
-  final_ssh_keys = {
-    for k, v in var.ssh_keys :
-    k => merge(local.key_defaults, v)
-  }
+  ssh_keys = flatten([
+    for user in var.users : [
+      for ssh_key in user.ssh_keys : {
+        username   = user.name
+        public_key = ssh_key.key
+        encoding   = ssh_key.key_encoding == null ? "SSH" : ssh_key.key_encoding
+        status     = ssh_key.key_status == null ? "Active" : ssh_key.key_status
+      }
+    ]
+  ])
 }
 
 resource "aws_iam_user" "main" {
-  name = var.user_name
-  path = var.user_path
-  tags = var.user_tags
+  for_each = { for k, v in var.users : k => v }
+
+  name = each.value.name
+  path = each.value.path == null ? "/" : each.value.path
+  tags = each.value.tags == null ? {} : each.value.tags
 }
 
 resource "aws_iam_user_ssh_key" "main" {
-  count = length(local.final_ssh_keys)
+  for_each = { for k, v in local.ssh_keys : k => v }
 
-  username   = aws_iam_user.main.name
-  public_key = local.final_ssh_keys[count.index].key
-  encoding   = local.final_ssh_keys[count.index].key_encoding
-  status     = local.final_ssh_keys[count.index].key_status
+  username   = each.value.username
+  public_key = each.value.public_key
+  encoding   = each.value.encoding
+  status     = each.value.status
 }
