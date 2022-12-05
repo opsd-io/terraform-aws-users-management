@@ -5,5 +5,5 @@
 
 output "policy_arns" {
   description = "List of policy names and their names"
-  value       = [ for policy in module.policies: policy.policy_arn ]
+  value       = [for policy in module.policies : policy.policy_arn]
 }
