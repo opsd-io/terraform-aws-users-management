@@ -10,3 +10,5 @@
 #   sensitive   = true
 #   default     = "abc"
 # }
+
+variable "policies" { default = [] }
