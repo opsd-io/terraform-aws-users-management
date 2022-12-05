@@ -9,6 +9,14 @@ locals {
       }
     ]
   ])
+  policies = flatten([
+    for user in var.users : [
+      for policy in user.policies == null ? [] : user.policies : {
+        user       = user.name
+        policy_arn = policy
+      }
+    ]
+  ])
 }
 
 resource "aws_iam_user" "main" {
@@ -26,4 +34,11 @@ resource "aws_iam_user_ssh_key" "main" {
   public_key = each.value.public_key
   encoding   = each.value.encoding
   status     = each.value.status
+}
+
+resource "aws_iam_user_policy_attachment" "main" {
+  for_each = { for k, v in local.policies : k => v }
+
+  user       = each.value.user
+  policy_arn = each.value.policy_arn
 }
