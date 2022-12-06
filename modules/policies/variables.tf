@@ -4,11 +4,6 @@
 #   default     = null
 # }
 
-# variable "name" {
-#   description = "Name of AIM policy"
-#   type        = string
-# }
-
 # variable "path" {
 #   description = "Path in which to create AIM policy"
 #   type        = string
@@ -30,9 +25,13 @@ variable "data" {
   description = "Object with AIM policy attributes"
   type = object({
     description = optional(string)
-    name        = string
     path        = optional(string)
     policy      = any
     tags        = optional(map(any))
   })
+}
+
+variable "name" {
+  description = "Name of AIM policy"
+  type        = string
 }
