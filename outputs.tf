@@ -4,6 +4,6 @@
 # }
 
 output "policy_arns" {
-  description = "List of policy names and their names"
-  value       = [for policy in module.policies : policy.policy_arn]
+  description = "Dictionary of policy names and their arns"
+  value       = merge([for policy in module.policies : policy.policy_arn]...)
 }
