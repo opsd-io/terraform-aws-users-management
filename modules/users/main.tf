@@ -14,7 +14,7 @@ resource "aws_iam_user_ssh_key" "main" {
   encoding   = each.value.encoding
   public_key = each.value.public_key
   status     = each.value.status
-  username   = var.name
+  username   = aws_iam_user.main.name
 }
 
 # assigning roles to user
