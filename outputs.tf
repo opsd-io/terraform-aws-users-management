@@ -5,5 +5,5 @@
 
 output "users_and_passwords" {
   description = "dictionary of users and their passwords"
-  value = merge([for user in module.users : user.user_password]...)
+  value       = merge([for user in module.users : user.user_password]...)
 }

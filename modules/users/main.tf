@@ -1,4 +1,9 @@
-data "aws_caller_identity" "current" {}
+locals {
+  roles = [
+    for name in var.options.roles :
+    lookup(var.role_dict, name, name)
+  ]
+}
 
 # user creation
 resource "aws_iam_user" "main" {
@@ -18,29 +23,11 @@ resource "aws_iam_user_ssh_key" "main" {
 }
 
 # assigning roles to user
-resource "aws_iam_policy" "main" {
-  for_each = { for k, v in var.options.roles : k => v }
-
-  description = "Policy that assigns user to a role"
-  name        = "${aws_iam_user.main.name}-${each.value}-assign"
-  path        = var.options.path
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect   = "Allow"
-        Action   = "iam:AttachRolePolicy"
-        Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${each.value}"
-      }
-    ]
-  })
-}
 resource "aws_iam_user_policy_attachment" "main" {
-  depends_on = [aws_iam_policy.main]
-  for_each   = aws_iam_policy.main
+  for_each = { for k, v in local.roles : k => v }
 
   user       = aws_iam_user.main.name
-  policy_arn = each.value.arn
+  policy_arn = each.value
 }
 
 # adding user to groups
