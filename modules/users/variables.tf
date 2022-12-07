@@ -1,15 +1,19 @@
-variable "users" {
-  description = "List of objects containing users name and all other user related attributes"
+variable "name" {
+  description = "AWS IAM user name"
+  type        = string
+}
 
-  type = list(object({
-    name     = string
-    path     = optional(string)
-    policies = optional(list(string))
-    tags     = optional(map(string))
+variable "options" {
+  description = "Object containing user groups, path, roles, tags and ssh_keys"
+  type = object({
+    groups = optional(list(string), [])
+    path   = optional(string)
+    roles  = optional(list(string), [])
+    tags   = optional(map(string))
     ssh_keys = optional(list(object({
-      key          = string
-      key_encoding = optional(string)
-      key_status   = optional(string)
-    })))
-  }))
+      encoding   = optional(string, "SSH")
+      public_key = string
+      status     = optional(string, "Active")
+    })), [])
+  })
 }

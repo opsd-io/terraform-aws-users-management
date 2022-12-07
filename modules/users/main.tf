@@ -1,44 +1,52 @@
-locals {
-  ssh_keys = flatten([
-    for user in var.users : [
-      for ssh_key in user.ssh_keys == null ? [] : user.ssh_keys : {
-        username   = user.name
-        public_key = ssh_key.key
-        encoding   = ssh_key.key_encoding == null ? "SSH" : ssh_key.key_encoding
-        status     = ssh_key.key_status == null ? "Active" : ssh_key.key_status
-      }
-    ]
-  ])
-  policies = flatten([
-    for user in var.users : [
-      for policy in user.policies == null ? [] : user.policies : {
-        user       = user.name
-        policy_arn = policy
-      }
-    ]
-  ])
-}
+data "aws_caller_identity" "current" {}
 
+# user creation
 resource "aws_iam_user" "main" {
-  for_each = { for k, v in var.users : k => v }
-
-  name = each.value.name
-  path = each.value.path == null ? "/" : each.value.path
-  tags = each.value.tags == null ? {} : each.value.tags
+  name = var.name
+  path = var.options.path
+  tags = var.options.tags
 }
 
+# adding ssh_keys to user
 resource "aws_iam_user_ssh_key" "main" {
-  for_each = { for k, v in local.ssh_keys : k => v }
+  for_each = { for k, v in var.options.ssh_keys : k => v if v.public_key != null }
 
-  username   = each.value.username
-  public_key = each.value.public_key
   encoding   = each.value.encoding
+  public_key = each.value.public_key
   status     = each.value.status
+  username   = var.name
 }
 
+# assigning roles to user
+resource "aws_iam_policy" "main" {
+  for_each = { for k, v in var.options.roles : k => v }
+
+  description = "Policy that assigns user to a role"
+  name        = "${aws_iam_user.main.name}-${each.value}-assign"
+  path        = var.options.path
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "iam:AttachRolePolicy"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${each.value}"
+      }
+    ]
+  })
+}
 resource "aws_iam_user_policy_attachment" "main" {
-  for_each = { for k, v in local.policies : k => v }
+  depends_on = [aws_iam_policy.main]
+  for_each   = aws_iam_policy.main
 
-  user       = each.value.user
-  policy_arn = each.value.policy_arn
+  user       = aws_iam_user.main.name
+  policy_arn = each.value.arn
 }
+
+# adding user to groups
+resource "aws_iam_user_group_membership" "main" {
+  user   = aws_iam_user.main.name
+  groups = var.options.groups
+}
+
+# TODO setting temporary password for new user
