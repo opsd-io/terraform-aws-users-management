@@ -1,20 +1,14 @@
-output "group_id" {
-  description = "IAM groups id"
-  value = [
-    for group in aws_iam_group.main : group.id
-  ]
+output "group_arn" {
+  description = "IAM group arn"
+  value       = { (aws_iam_group.main.name) = aws_iam_group.main.arn }
 }
 
-output "group_arn" {
-  description = "IAM groups arn"
-  value = [
-    for group in aws_iam_group.main : group.arn
-  ]
+output "group_id" {
+  description = "IAM group id"
+  value       = { (aws_iam_group.main.name) = aws_iam_group.main.id }
 }
 
 output "group_unique_id" {
-  description = "IAM groups unique id"
-  value = [
-    for group in aws_iam_group.main : group.unique_id
-  ]
+  description = "IAM group unique id"
+  value       = { (aws_iam_group.main.name) = aws_iam_group.main.unique_id }
 }

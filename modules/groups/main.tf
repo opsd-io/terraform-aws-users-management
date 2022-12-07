@@ -1,32 +1,32 @@
-locals {
-  policies = flatten([
-    for group in var.groups : [
-      for policy in group.policies == null ? [] : group.policies : {
-        group      = group.name
-        policy_arn = policy
-      }
-    ]
-  ])
-}
+data "aws_caller_identity" "current" {}
 
 resource "aws_iam_group" "main" {
-  for_each = { for k, v in var.groups : k => v }
-
-  name = each.value.name
-  path = each.value.path
+  name = var.name
+  path = var.options.path
 }
 
-resource "aws_iam_group_membership" "main" {
-  for_each = { for k, v in var.groups : k => v if v.users != null }
+resource "aws_iam_policy" "main" {
+  for_each = { for k, v in var.options.roles : k => v }
 
-  group = each.value.name
-  name  = each.value.name
-  users = each.value.users
+  description = "Policy that assigns group to a role"
+  name        = "${aws_iam_group.main.name}-${each.value}-assign"
+  path        = var.options.path
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "iam:AttachRolePolicy"
+        Resource = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${each.value}"
+      }
+    ]
+  })
 }
 
 resource "aws_iam_group_policy_attachment" "main" {
-  for_each = { for k, v in local.policies : k => v }
+  depends_on = [aws_iam_policy.main]
+  for_each   = aws_iam_policy.main
 
-  group      = each.value.group
-  policy_arn = each.value.policy_arn
+  group      = aws_iam_group.main.name
+  policy_arn = each.value.arn
 }

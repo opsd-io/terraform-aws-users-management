@@ -1,9 +1,24 @@
-variable "groups" {
-  description = "List of IAM Groups, their paths and users"
-  type = list(object({
-    name     = string
-    path     = optional(string)
-    policies = optional(list(string))
-    users    = optional(list(string))
-  }))
+# variable "path" {
+#   description = "Path in which to create AIM Group"
+#   type        = string
+#   default     = null
+# }
+
+# variable "roles" {
+#   description = "Roles accessible to this group"
+#   type        = list(string)
+#   default     = []
+# }
+
+variable "name" {
+  description = "IAM Group name"
+  type        = string
+}
+
+variable "options" {
+  description = "List of IAM Group paths and roles"
+  type = object({
+    path  = optional(string)
+    roles = optional(list(string), [])
+  })
 }
