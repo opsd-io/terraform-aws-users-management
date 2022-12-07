@@ -22,3 +22,9 @@ variable "options" {
     roles = optional(list(string), [])
   })
 }
+
+variable "role_dict" {
+  description = "Dictionary of roles and policies for assuming them"
+  type        = map(string)
+  nullable    = true
+}
