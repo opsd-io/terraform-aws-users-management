@@ -28,13 +28,13 @@
 #   default     = null
 # }
 
-variable "arn_dict" {
-  description = "Dictionary of policy names and arns"
-  type        = map(string)
-  nullable    = true
+
+variable "name" {
+  description = "AIM role name"
+  type        = string
 }
 
-variable "data" {
+variable "options" {
   description = "Object with AIM policy attributes"
   type = object({
     assume_role_policy = optional(any)
@@ -44,7 +44,8 @@ variable "data" {
   })
 }
 
-variable "name" {
-  description = "AIM role name"
-  type        = string
+variable "policy_dict" {
+  description = "Dictionary of policy names and arns"
+  type        = map(string)
+  nullable    = true
 }
