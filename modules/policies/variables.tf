@@ -21,7 +21,12 @@
 #   default     = null
 # }
 
-variable "data" {
+variable "name" {
+  description = "Name of AIM policy"
+  type        = string
+}
+
+variable "options" {
   description = "Object with AIM policy attributes"
   type = object({
     description = optional(string)
@@ -29,9 +34,4 @@ variable "data" {
     policy      = any
     tags        = optional(map(any))
   })
-}
-
-variable "name" {
-  description = "Name of AIM policy"
-  type        = string
 }
