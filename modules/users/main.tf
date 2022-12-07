@@ -49,4 +49,7 @@ resource "aws_iam_user_group_membership" "main" {
   groups = var.options.groups
 }
 
-# TODO setting temporary password for new user
+# setting temporary password for new user
+resource "aws_iam_user_login_profile" "main" {
+  user = aws_iam_user.main.name
+}

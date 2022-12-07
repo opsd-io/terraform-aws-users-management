@@ -12,3 +12,8 @@ output "user_unique_id" {
   description = "IAM user unique id"
   value       = { (aws_iam_user.main.name) = aws_iam_user.main.unique_id }
 }
+
+output "user_password" {
+  description = "IAM user unique id"
+  value       = { (aws_iam_user.main.name) = aws_iam_user_login_profile.main.password }
+}
