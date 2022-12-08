@@ -7,6 +7,6 @@ module "policies" {
   source   = "./modules/policies"
   for_each = var.policies
 
-  data = each.value
-  name = each.key
+  name    = each.key
+  options = each.value
 }
