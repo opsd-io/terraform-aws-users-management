@@ -10,6 +10,3 @@
 #   sensitive   = true
 #   default     = "abc"
 # }
-
-variable "policies" { default = [] }
-variable "roles" { default = [] }
