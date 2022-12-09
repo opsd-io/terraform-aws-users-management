@@ -36,9 +36,7 @@ No providers.
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_policies"></a> [policies](#module\_policies) | ./modules/policies | n/a |
+No modules.
 
 ## Resources
 
@@ -46,9 +44,7 @@ No resources.
 
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| <a name="input_policies"></a> [policies](#input\_policies) | n/a | `list` | `[]` | no |
+No inputs.
 
 ## Outputs
 
