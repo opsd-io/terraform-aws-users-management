@@ -1,7 +1,7 @@
 resource "aws_iam_policy" "main" {
-  description = var.options.description
+  description = var.description
   name        = var.name
-  path        = var.options.path
-  policy      = jsonencode(var.options.policy)
-  tags        = var.options.tags
+  path        = var.path
+  policy      = jsonencode(var.policy)
+  tags        = var.tags
 }
