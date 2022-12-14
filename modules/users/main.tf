@@ -1,6 +1,6 @@
 locals {
   roles = [
-    for name in var.options.roles :
+    for name in var.roles :
     lookup(var.role_dict, name, name)
   ]
 }
@@ -8,13 +8,13 @@ locals {
 # user creation
 resource "aws_iam_user" "main" {
   name = var.name
-  path = var.options.path
-  tags = var.options.tags
+  path = var.path
+  tags = var.tags
 }
 
 # adding ssh_keys to user
 resource "aws_iam_user_ssh_key" "main" {
-  for_each = { for k, v in var.options.ssh_keys : k => v if v.public_key != null }
+  for_each = { for k, v in var.ssh_keys : k => v if v.public_key != null }
 
   encoding   = each.value.encoding
   public_key = each.value.public_key
@@ -33,7 +33,7 @@ resource "aws_iam_user_policy_attachment" "main" {
 # adding user to groups
 resource "aws_iam_user_group_membership" "main" {
   user   = aws_iam_user.main.name
-  groups = var.options.groups
+  groups = var.groups
 }
 
 # setting temporary password for new user
