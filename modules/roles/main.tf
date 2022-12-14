@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 locals {
-  assume_role_policy = jsonencode(var.options.assume_role_policy != null ? var.options.assume_role_policy : {
+  assume_role_policy = jsonencode(var.assume_role_policy != null ? var.assume_role_policy : {
     Version = "2012-10-17",
     Statement = [{
       Action    = "sts:AssumeRole"
@@ -10,7 +10,7 @@ locals {
     }]
   })
   policies = [
-    for name in var.options.policies :
+    for name in var.policies :
     lookup(var.policy_dict, name, name)
   ]
 }
@@ -19,9 +19,9 @@ resource "aws_iam_role" "main" {
   force_detach_policies = true
 
   assume_role_policy = local.assume_role_policy
-  description        = var.options.description
+  description        = var.description
   name               = var.name
-  tags               = var.options.tags
+  tags               = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "main" {
