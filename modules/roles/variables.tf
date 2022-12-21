@@ -1,15 +1,9 @@
-variable "assume_role_policy" {
-  description = "Police that grants an entitiy permission to assume the role"
-  type        = any
-  nullable    = true
-  # default = object({
-  #   Version = formatdate("YYYY-MM-DD", timestamp())
-  #   Statement = [{
-  #     Action    = "sts:AssumeRole"
-  #     Effect    = "Allow"
-  #     Principal = { AWS = "arn:aws:iam::*:root" }
-  #   }]
-  # })
+variable "allowed_principals" {
+  description = "object with allowed principals that grant permission to assume the role"
+  type = object({
+    AWS     = optional(set(string), [])
+    Service = optional(set(string), [])
+  })
 }
 
 variable "description" {
@@ -26,6 +20,7 @@ variable "name" {
 variable "policies" {
   description = "List of policy names or arns for a given role"
   type        = list(string)
+  default     = []
 }
 
 variable "tags" {
@@ -37,5 +32,5 @@ variable "tags" {
 variable "policy_dict" {
   description = "Dictionary of policy names and arns"
   type        = map(string)
-  nullable    = true
+  default     = {}
 }
